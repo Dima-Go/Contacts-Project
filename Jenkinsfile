@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Clone Git Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/fullstackjava082023/FLASK-CONTACTS-DEVOPS.git'
+                git branch: 'main', url: 'https://github.com/Dima-Go/Contacts-Project.git'
             }
         }
     // Build Docker Image: Builds a Docker image using the Dockerfile in your repository.

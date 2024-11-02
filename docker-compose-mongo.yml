@@ -1,6 +1,6 @@
 services: 
   my-app: 
-    image: shashkist/flask-contacts-app
+    image: dimagolde/contacts-project
     ports: 
       - 5053:5052
     environment:
