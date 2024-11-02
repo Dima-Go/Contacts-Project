@@ -1,0 +1,40 @@
+services: 
+  my-app: 
+    image: shashkist/flask-contacts-app
+    ports: 
+      - 5052:5052
+    environment:
+      - DATABASE_TYPE=MYSQL
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=admin
+      - DB_NAME=contacts_app
+    volumes: 
+      - app-data:/app/static/images
+    depends_on: 
+      mysql:
+        condition: service_healthy
+  mysql: 
+    image: mysql:8.0.25
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=contacts_app
+    volumes: 
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on: 
+      mysql: 
+        condition: service_healthy
+    environment:
+      - PMA_HOST=mysql
+      - MYSQL_ROOT_PASSWORD=admin
+    ports:
+      - 5055:80
+volumes:
+  mysql-data: 
+  app-data: 
+  phpmyadmin-data:
