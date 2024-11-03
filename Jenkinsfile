@@ -18,15 +18,18 @@ pipeline {
 
     // Run Docker Compose: Runs the appropriate docker-compose.yml file based on the selected DATABASE_TYPE parameter.
         stage('Run Docker Compose') {
+            parameters { 
+                choice (name: 'DATABASE_TYPE', choices: ['MYSQL', 'MONGO'], description: 'Choose the database to use')
+            }
             steps {
                 sh 'docker-compose down'
-                    if (params.DATABASE_TYPE == 'MONGO') {
-                        sh 'docker-compose -f docker-compose-mongo.yml up -d'
-                    } else {
-                        sh 'docker-compose -f docker-compose-mysql.yml up -d'
-                    }
+                if (params.DATABASE_TYPE == 'MONGO') {
+                    sh 'docker-compose -f docker-compose-mongo.yml up -d'
+                } else {
+                    sh 'docker-compose -f docker-compose-mysql.yml up -d'
                 }
             }
+        }
     // Push Docker Image to Docker Hub: Pushes the built image to Docker Hub using the credentials defined in Jenkins.
         stage('Push Docker Image to Docker Hub') {
             environment {
@@ -40,11 +43,6 @@ pipeline {
         }
     }
 }
-
-// Configuration Details:
-
-// Select the database type: 
-// The choices for DATABASE_TYPE are 'MONGO' or 'MYSQL'
 
 // Docker Hub Credentials:
 // In Jenkins, go to Manage Jenkins > Manage Credentials, and add a credential with ID 'docker-creds'. This will hold your Docker Hub username and password.
